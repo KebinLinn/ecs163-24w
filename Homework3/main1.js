@@ -7,7 +7,6 @@ let scatterMargin = { top: 100, right: 30, bottom: 0, left: 900 },
   scatterWidth = 1200 - scatterMargin.left - scatterMargin.right,
   scatterHeight = 350 - scatterMargin.top - scatterMargin.bottom;
 
-// Adjust this variable to move the scatterplot to the right
 let scatterLeft2 = scatterWidth + scatterMargin.left + scatterMargin.right + 100;
 
 let distrLeft = 400, distrTop = 0;
@@ -53,14 +52,14 @@ d3.csv("pokemon.csv").then(rawData => {
     .attr("y", -scatterMargin.top / 2)
     .attr("text-anchor", "middle")
     .style("font-size", "18px")
-    .style("fill", "white") // Change text color to white
+    .style("fill", "white") 
     .text("Pokemon Attack vs Defense / Special Attack vs Special Defense Scatterplot (Brushing Animation)");
     g1.append("text")
     .attr("x", scatterWidth / 2)
-    .attr("y", -scatterMargin.top / 2 + 20) // Adjust this value to position the text below the title
+    .attr("y", -scatterMargin.top / 2 + 20) 
     .attr("text-anchor", "middle")
     .style("font-size", "16px")
-    .style("fill", "purple") // Set text color to purple
+    .style("fill", "purple")
     .text("Drag and highlight desired area on Graph 1");
   // X label
   g1.append("text")
@@ -197,7 +196,6 @@ d3.csv("pokemon.csv").then(rawData => {
 
   function brushed() {
     var selection = d3.brushSelection(this);
-    // Collect names of points within the brush selection in the first scatter plot
     let selectedNames = [];
     g1.selectAll("circle")
       .style("fill", function (d) {
@@ -209,11 +207,8 @@ d3.csv("pokemon.csv").then(rawData => {
         return isSelected ? "yellow" : "#527ef6";
       });
 
-    // Apply the same logic for the second scatter plot
-    // Highlight corresponding points in the second scatter plot based on selected names
     g2.selectAll("circle")
       .style("fill", function (d) {
-        // Check if the name of the current point is in the list of selected names
         var isHighlighted = selectedNames.includes(d.name);
         return isHighlighted ? "yellow" : "#527ef6"; // If highlighted, color it red, otherwise blue
   })
@@ -221,17 +216,14 @@ d3.csv("pokemon.csv").then(rawData => {
 
     // Barplot 
     const gen1Data = rawData.filter(function(d) {
-      // Check if Generation is a string and convert it to a number for comparison, or directly compare if already a number
       return +d.Generation === 1;
   });
   
-  // Proceed with the rest of the data processing using gen1Data
   gen1Data.forEach(function (d) {
       d.name = d.Name;
       d.total = +d.Total; // Convert 'Total' to number
   });
   
-  // Mapping the filtered data for visualization
   const r = gen1Data.map(({ name, total }) => ({ name, total }));
 
     const g3 = svg.append("g")
@@ -250,7 +242,7 @@ d3.csv("pokemon.csv").then(rawData => {
       .style("font-size", "18px")
       .style("fill", "white")
       .text(titleText);
-g3.selectAll(".domain, .tick line").attr("stroke", "white"); // Add this line
+g3.selectAll(".domain, .tick line").attr("stroke", "white"); 
 
 
     const colorScale = d3.scaleOrdinal()
@@ -292,7 +284,7 @@ g3.selectAll(".domain, .tick line").attr("stroke", "white"); // Add this line
       .attr("text-anchor", "end")
       .style("fill", "white")
       .attr("transform", "rotate(-40)");
-    g3.selectAll(".domain, .tick line").attr("stroke", "white"); // Add this line
+    g3.selectAll(".domain, .tick line").attr("stroke", "white"); 
 
     // Y ticks
     const y3 = d3.scaleLinear()
@@ -303,7 +295,7 @@ g3.selectAll(".domain, .tick line").attr("stroke", "white"); // Add this line
       .ticks(6);
       const yAxis = g3.append("g").call(yAxisCall3);
 
-yAxis.selectAll(".domain, .tick line").attr("stroke", "white"); // Change color of axis and tick lines to white
+yAxis.selectAll(".domain, .tick line").attr("stroke", "white"); 
 yAxis.selectAll("text").style("fill", "white");
     const rects3 = g3.selectAll("rect").data(r);
 
