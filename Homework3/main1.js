@@ -16,7 +16,7 @@ let distrMargin = { top: 10, right: 30, bottom: 30, left: 900 },
 
 let teamLeft = 0, teamTop = 500;
 let teamMargin = { top: 30, right: 20, bottom: 30, left: 70 },
-  teamWidth = (width - teamMargin.left - teamMargin.right) / 1,
+  teamWidth = (width - teamMargin.left - teamMargin.right) / 1.4,
   teamHeight = (height - 430 - teamMargin.top - teamMargin.bottom) / 2;
 
 let parallelLeft = 0
@@ -243,7 +243,15 @@ d3.csv("pokemon.csv").then(rawData => {
       .style("fill", "white")
       .text(titleText);
 g3.selectAll(".domain, .tick line").attr("stroke", "white"); 
-
+g3.selectAll(".domain, .tick line").attr("stroke", "white"); 
+g3.selectAll(".domain, .tick line").attr("stroke", "white");
+g3.append("text")
+.attr("x", teamWidth-300) 
+.attr("y", -teamMargin.top / 2)
+.attr("text-anchor", "end") 
+.style("font-size", "16px")
+.style("fill", "purple") 
+.text("Use scroll wheel to zoom in and out ");
 
     const colorScale = d3.scaleOrdinal()
       .range(["#527ef6"]);
@@ -306,6 +314,33 @@ yAxis.selectAll("text").style("fill", "white");
       .attr("height", d => teamHeight - y3(d.total))
       .attr("fill", d => colorScale(d.name));
       
+const zoom = d3.zoom()
+  .scaleExtent([1, 10])
+  .on("zoom", zoomed);
+
+g3.call(zoom);
+
+let isZoomedIn = false;
+
+function handleBarClick(d) {
+  if (isZoomedIn) {
+    g3.transition().duration(500).call(zoom.transform, d3.zoomIdentity);
+    isZoomedIn = false;
+  } else {
+    const x = xScale(d.name) + xScale.bandwidth() / 2;
+    const y = yScale(d.total);
+    const k = 5;
+    g3.transition().duration(500).call(zoom.transform, d3.zoomIdentity.translate(teamWidth / 2 - x * k, teamHeight / 2 - y * k).scale(k));
+    isZoomedIn = true;
+  }
+}
+
+function zoomed(event) {
+  g3.attr("transform", event.transform);
+}
+
+g3.selectAll(".bar")
+  .on("click", handleBarClick);
 
 
 
