@@ -14,11 +14,12 @@ let distrMargin = { top: 10, right: 30, bottom: 30, left: 900 },
   distrWidth = 1200 - distrMargin.left - distrMargin.right,
   distrHeight = 350 - distrMargin.top - distrMargin.bottom;
 
-let teamLeft = 0, teamTop = 500;
-let teamMargin = { top: 30, right: 20, bottom: 30, left: 70 },
-  teamWidth = (width - teamMargin.left - teamMargin.right) / 1.4,
-  teamHeight = (height - 430 - teamMargin.top - teamMargin.bottom) / 2;
-
+  let teamLeft = 0, teamTop = 500;
+  let teamMargin = { top: 30, right: 20, bottom: 30, left: 70 },
+      shrinkFactor = 0.6, // Factor to reduce the dimensions by 20%
+      teamWidth = ((width - teamMargin.left - teamMargin.right) / 1.4) * shrinkFactor,
+      teamHeight = ((height - 430 - teamMargin.top - teamMargin.bottom) / 2) * shrinkFactor;
+  
 let parallelLeft = 0
 let parallelTop = 0;
 let parallelMargin = { top: 100, right: 60, bottom: 10, left: 100 },
@@ -53,7 +54,7 @@ d3.csv("pokemon.csv").then(rawData => {
     .attr("text-anchor", "middle")
     .style("font-size", "18px")
     .style("fill", "white") 
-    .text("Pokemon Attack vs Defense / Special Attack vs Special Defense Scatterplot (Brushing Animation)");
+    .text("Generation 1 Pokemon Attack vs Defense / Special Attack vs Special Defense Scatterplot (Brushing Animation)");
     g1.append("text")
     .attr("x", scatterWidth / 2)
     .attr("y", -scatterMargin.top / 2 + 20) 
@@ -216,7 +217,7 @@ d3.csv("pokemon.csv").then(rawData => {
 
     // Barplot 
     const gen1Data = rawData.filter(function(d) {
-      return +d.Generation === 1;
+      return +d.Generation === 1 || +d.Generation === 2 || +d.Generation === 3;
   });
   
   gen1Data.forEach(function (d) {
@@ -231,7 +232,7 @@ d3.csv("pokemon.csv").then(rawData => {
       .attr("height", teamHeight + teamMargin.top + teamMargin.bottom)
       .attr("transform", `translate(${teamMargin.left}, ${teamTop})`);
       
-    const titleText = "Pokemon Total Stats (Focused)";
+    const titleText = "All Pokemon Total Stats (Focused)";
     const titleWidth = titleText.length * 8; // Rough estimation of title width, adjust as needed
     const titleX = (teamWidth - titleWidth) / 2; // Calculate x-coordinate for centering
 
@@ -413,7 +414,7 @@ g3.selectAll(".bar")
         .attr("y", -parallelMargin.top / 2)
         .attr("text-anchor", "middle")
         .style("font-size", "18px")
-        .text("Pokemon Parallel Coordinates Plot (Selection)");
+        .text("Generation 1 Pokemon Parallel Coordinates Plot (Selection)");
 
       g1.append("g").attr("class", "foreground")
         .selectAll("path")
